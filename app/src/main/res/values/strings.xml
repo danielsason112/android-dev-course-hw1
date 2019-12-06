@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Space Rush</string>
+    <string name="new_game">New Game</string>
+    <string name="main_title">Space Rush</string>
+    <string name="game_over">Game Over</string>
+    <string name="score">Score:</string>
+    <string name="restart_game">Restart Game</string>
+    <string name="instractions">Instractions:</string>
+    <string name="info">Move left or right by clicking on left or right side of the screen. Avoid the object coming down the screen.</string>
+</resources>
