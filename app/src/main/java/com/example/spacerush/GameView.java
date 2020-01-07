@@ -1,19 +1,14 @@
 package com.example.spacerush;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
-import java.util.Random;
-import java.util.Timer;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -22,7 +17,9 @@ public class GameView extends SurfaceView implements Runnable {
 
     private Player player;
     private Enemy[] enemies;
+    private Friend[] friends;
     private Enemy lockedEnemy;
+    private Friend lockedFriend;
 
     private int screenX;
     private int screenY;
@@ -34,7 +31,8 @@ public class GameView extends SurfaceView implements Runnable {
     private int score;
 
     private volatile boolean isPlaying;
-    private volatile boolean lock;
+    private volatile boolean enemyLock;
+    private volatile boolean friendLock;
 
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
@@ -43,9 +41,15 @@ public class GameView extends SurfaceView implements Runnable {
     public final int PLAYER_SIZE = 100;
     public final int ENEMY_SIZE = 150;
     public final int PADDING_Y = 300;
-    public final int NUM_OF_PATHS = 3;
+    public final int NUM_OF_PATHS = 5;
+    public final int NUM_OF_ENEMIES = 5;
     public final int ENEMIES_PADDING = 500;
-    public final int ENEMIES_SPEED = 10;
+    public final int ENEMIES_SPEED = 20;
+    public final int FRIEND_SIZE = 50;
+    public final int FRIEND_SPEED = 30;
+    public final int NUM_OF_FRIENDS = 2;
+    public final int FRIEND_PADDING = 1000;
+    public final int FRIEND_PRIZE = 100;
 
     private GameOverListener listener;
 
@@ -53,8 +57,9 @@ public class GameView extends SurfaceView implements Runnable {
         super(context);
 
         this.context = context;
-        this.lock = false;
+        this.enemyLock = false;
         this.lockedEnemy = null;
+        this.lockedFriend = null;
 
         screenX = size.x;
         screenY = size.y;
@@ -63,11 +68,18 @@ public class GameView extends SurfaceView implements Runnable {
         surfaceY = screenY - PADDING_Y;
         player = new Player(startingX, surfaceY, PLAYER_SIZE);
 
-        enemies = new Enemy[NUM_OF_PATHS];
-        for (int i=0; i<NUM_OF_PATHS; i++) {
+        enemies = new Enemy[NUM_OF_ENEMIES];
+        for (int i=0; i<NUM_OF_ENEMIES; i++) {
             int enemyStartingY = -(ENEMIES_PADDING + (i * ENEMIES_PADDING));
             enemies[i] = new Enemy(enemyStartingY, ENEMY_SIZE, ENEMIES_SPEED);
             enemies[i].moveToRandX(screenX, NUM_OF_PATHS);
+        }
+
+        friends = new Friend[NUM_OF_FRIENDS];
+        for (int i=0; i<NUM_OF_FRIENDS; i++) {
+            int friendStartingY = -(FRIEND_PADDING + (i * FRIEND_PADDING));
+            friends[i] = new Friend(friendStartingY, FRIEND_SIZE, FRIEND_SPEED);
+            friends[i].moveToRandX(screenX, NUM_OF_PATHS);
         }
 
         surfaceHolder = getHolder();
@@ -106,6 +118,12 @@ public class GameView extends SurfaceView implements Runnable {
                 canvas.drawRect(enemies[i].getRect(), paint);
             }
 
+            // Friends
+            paint.setColor(Color.YELLOW);
+            for (int i=0; i<friends.length; i++) {
+                canvas.drawCircle(friends[i].getPosX(), friends[i].getPosY(), friends[i].getSize() / 2.0f, paint);
+            }
+
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }
@@ -116,19 +134,21 @@ public class GameView extends SurfaceView implements Runnable {
         player.update();
 
         for (int i=0; i<enemies.length; i++) {
-            enemies[i].update();
-
-            // Set enemies position back to top
-            if (enemies[i].getPosY() >= screenY) {
-                enemies[i].setPosY(-ENEMIES_PADDING);
-                enemies[i].moveToRandX(screenX, NUM_OF_PATHS);
-            }
+            enemies[i].update(screenY, screenX, ENEMIES_PADDING, NUM_OF_PATHS);
         }
 
-        // Release collision lock
+        for (int i=0; i<friends.length; i++) {
+            friends[i].update(screenY, screenX, ENEMIES_PADDING, NUM_OF_PATHS);
+        }
+
+        // Release collision enemyLock
         if (lockedEnemy != null && lockedEnemy.getPosY() < 0) {
             lockedEnemy = null;
-            lock = false;
+            enemyLock = false;
+        }
+        if (lockedFriend != null && lockedFriend.getPosY() < 0) {
+            lockedFriend = null;
+            friendLock = false;
         }
     }
 
@@ -136,8 +156,8 @@ public class GameView extends SurfaceView implements Runnable {
         try {
             // Check for impact
             for (int i=0; i<enemies.length; i++) {
-                if (Rect.intersects(enemies[i].getRect(), player.getRect()) && !lock) {
-                    lock = true;
+                if (Rect.intersects(enemies[i].getRect(), player.getRect()) && !enemyLock) {
+                    enemyLock = true;
                     lockedEnemy = enemies[i];
                     player.collision();
 
@@ -147,10 +167,22 @@ public class GameView extends SurfaceView implements Runnable {
                     }
                 }
             }
+
+            for (int i=0; i<friends.length; i++) {
+                if (Rect.intersects(friends[i].getRect(), player.getRect()) && !friendLock) {
+                    friendLock = true;
+                    lockedFriend = friends[i];
+                    this.prize(FRIEND_PRIZE);
+                }
+            }
             gameThread.sleep(MILLIS_PER_SECOND / FPS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void prize(int extraPoints) {
+        this.score += extraPoints;
     }
 
     public void setListener(GameOverListener listener) {
@@ -162,15 +194,15 @@ public class GameView extends SurfaceView implements Runnable {
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
 
-                if(event.getX() < screenX / 2) {
+                if(event.getX() < screenX / 2.0) {
                     // Move left
-                    if (player.getPosX() > 0 + player.getSize()) {
-                        player.move(-(screenX / NUM_OF_PATHS) - PLAYER_SIZE);
+                    if (player.getPosX() >player.getSize()) {
+                        player.move(-(screenX / NUM_OF_PATHS) );
                     }
                 } else {
                     // Move right
                     if (player.getPosX() + player.getSize() < screenX - PLAYER_SIZE) {
-                        player.move((screenX / NUM_OF_PATHS) + PLAYER_SIZE);
+                        player.move(screenX / NUM_OF_PATHS);
                     }
                 }
 
