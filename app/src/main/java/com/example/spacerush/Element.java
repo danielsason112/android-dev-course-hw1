@@ -18,8 +18,14 @@ public class Element {
         this.speed = speed;
     }
 
-    public void update() {
+    public void update(int screenY, int screenX, int padding, int numOfPaths) {
         posY+=speed;
+
+        // Set an element's y position back to top, and move to a random path
+        if (this.getPosY() >= screenY) {
+            this.setPosY(-padding);
+            this.moveToRandX(screenX, numOfPaths);
+        }
     }
 
     public int getPosX() {
