@@ -1,19 +1,14 @@
 package com.example.spacerush;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
-import java.util.Random;
-import java.util.Timer;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -43,9 +38,10 @@ public class GameView extends SurfaceView implements Runnable {
     public final int PLAYER_SIZE = 100;
     public final int ENEMY_SIZE = 150;
     public final int PADDING_Y = 300;
-    public final int NUM_OF_PATHS = 3;
+    public final int NUM_OF_PATHS = 5;
+    public final int NUM_OF_ENEMIES = 5;
     public final int ENEMIES_PADDING = 500;
-    public final int ENEMIES_SPEED = 10;
+    public final int ENEMIES_SPEED = 20;
 
     private GameOverListener listener;
 
@@ -63,11 +59,11 @@ public class GameView extends SurfaceView implements Runnable {
         surfaceY = screenY - PADDING_Y;
         player = new Player(startingX, surfaceY, PLAYER_SIZE);
 
-        enemies = new Enemy[NUM_OF_PATHS];
-        for (int i=0; i<NUM_OF_PATHS; i++) {
+        enemies = new Enemy[NUM_OF_ENEMIES];
+        for (int i=0; i<NUM_OF_ENEMIES; i++) {
             int enemyStartingY = -(ENEMIES_PADDING + (i * ENEMIES_PADDING));
             enemies[i] = new Enemy(enemyStartingY, ENEMY_SIZE, ENEMIES_SPEED);
-            enemies[i].moveToRandX(screenX, NUM_OF_PATHS);
+            enemies[i].moveToRandX(screenX, NUM_OF_ENEMIES);
         }
 
         surfaceHolder = getHolder();
@@ -162,15 +158,15 @@ public class GameView extends SurfaceView implements Runnable {
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
 
-                if(event.getX() < screenX / 2) {
+                if(event.getX() < screenX / 2.0) {
                     // Move left
-                    if (player.getPosX() > 0 + player.getSize()) {
-                        player.move(-(screenX / NUM_OF_PATHS) - PLAYER_SIZE);
+                    if (player.getPosX() >player.getSize()) {
+                        player.move(-(screenX / NUM_OF_PATHS) );
                     }
                 } else {
                     // Move right
                     if (player.getPosX() + player.getSize() < screenX - PLAYER_SIZE) {
-                        player.move((screenX / NUM_OF_PATHS) + PLAYER_SIZE);
+                        player.move(screenX / NUM_OF_PATHS);
                     }
                 }
 
