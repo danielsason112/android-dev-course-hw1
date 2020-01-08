@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "68533104794",
+    "firebase_url": "https://spacerush-fb775.firebaseio.com",
+    "project_id": "spacerush-fb775",
+    "storage_bucket": "spacerush-fb775.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68533104794:android:abe65f7bc485fff640ef23",
+        "android_client_info": {
+          "package_name": "com.example.spacerush"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "68533104794-6gqrv2pp88dh8g9neio916706psfjpfm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnYtg6WE74jBx17N8oxIifOI-DDAhoYuc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "68533104794-6gqrv2pp88dh8g9neio916706psfjpfm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
