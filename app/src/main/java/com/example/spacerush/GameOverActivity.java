@@ -2,7 +2,6 @@ package com.example.spacerush;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,12 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.spacerush.DAL.UserDAL;
 import com.example.spacerush.model.User;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 public class GameOverActivity extends AppCompatActivity {
 
@@ -47,28 +43,8 @@ public class GameOverActivity extends AppCompatActivity {
         // Set the database reference and the query
         db = FirebaseDatabase.getInstance().getReference().child("players");
         final Query query = db.orderByChild("score");
-
         // Query for all the players in the high scores ordered by score
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get the first child which contains the player with the lowest score
-                DataSnapshot child = dataSnapshot.getChildren().iterator().next();
-                User last = child.getValue(User.class);
-                // Check if the current user's score is higher
-                if (score > last.getScore()) {
-                    // Replace the value of the document with the current user's detailsS
-                    db.child(child.getKey()).setValue(user);
-                    newHighScore = findViewById(R.id.newHighScore);
-                    newHighScore.setText("A New High Score!");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("info", "High scores update canceled", databaseError.toException());
-            }
-        });
+        query.addListenerForSingleValueEvent(new HighScoresValueEventListener(this));
     }
 
     public void restartGame(View v) {
@@ -79,5 +55,25 @@ public class GameOverActivity extends AppCompatActivity {
     public void highScores(View v) {
         Intent intent = new Intent(GameOverActivity.this, HighScoresActivity.class);
         startActivity(intent);
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public DatabaseReference getDb() {
+        return db;
+    }
+
+    public TextView getNewHighScore() {
+        return newHighScore;
+    }
+
+    public void setNewHighScore(TextView newHighScore) {
+        this.newHighScore = newHighScore;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

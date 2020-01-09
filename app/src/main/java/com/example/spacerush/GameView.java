@@ -10,6 +10,10 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.spacerush.model.Enemy;
+import com.example.spacerush.model.Friend;
+import com.example.spacerush.model.Player;
+
 public class GameView extends SurfaceView implements Runnable {
 
     private Thread gameThread;
@@ -196,7 +200,7 @@ public class GameView extends SurfaceView implements Runnable {
 
                 if(event.getX() < screenX / 2.0) {
                     // Move left
-                    if (player.getPosX() >player.getSize()) {
+                    if (player.getPosX() > player.getSize()) {
                         player.move(-(screenX / NUM_OF_PATHS) );
                     }
                 } else {

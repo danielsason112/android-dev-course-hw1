@@ -1,4 +1,4 @@
-package com.example.spacerush;
+package com.example.spacerush.model;
 
 import android.graphics.Rect;
 

@@ -9,13 +9,20 @@
 <TableRow>
     <TextView android:text="@string/name"
         android:padding="5dp"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textSize="25dip"
+        android:background="@color/colorPrimary"
+        />
     <TextView android:text="@string/score_table"
         android:padding="5dp"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="25dip"
+        android:background="@color/colorPrimary" />
     <TextView android:text="@string/location"
         android:padding="5dp"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="25dip"
+        android:background="@color/colorPrimary" />
 
 </TableRow>
 
