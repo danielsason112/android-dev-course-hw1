@@ -22,6 +22,7 @@ public class GameOverActivity extends AppCompatActivity {
     private int score = 0;
     private User user;
     private DatabaseReference db;
+    private TextView newHighScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,8 @@ public class GameOverActivity extends AppCompatActivity {
                 if (score > last.getScore()) {
                     // Replace the value of the document with the current user's detailsS
                     db.child(child.getKey()).setValue(user);
+                    newHighScore = findViewById(R.id.newHighScore);
+                    newHighScore.setText("A New High Score!");
                 }
             }
 
@@ -70,6 +73,11 @@ public class GameOverActivity extends AppCompatActivity {
 
     public void restartGame(View v) {
         Intent intent = new Intent(GameOverActivity.this, GameActivity.class);
+        startActivity(intent);
+    }
+
+    public void highScores(View v) {
+        Intent intent = new Intent(GameOverActivity.this, HighScoresActivity.class);
         startActivity(intent);
     }
 }
