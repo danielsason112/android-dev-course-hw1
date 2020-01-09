@@ -5,6 +5,9 @@ public class Geolocation {
     private double lat;
     private double lng;
 
+    public Geolocation() {
+    }
+
     public Geolocation(double lat, double lng) {
         this.lat = lat;
         this.lng = lng;

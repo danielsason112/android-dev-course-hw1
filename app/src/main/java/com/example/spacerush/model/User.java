@@ -1,14 +1,21 @@
 package com.example.spacerush.model;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class User {
 
-    private String ID;
     private String name;
     private Geolocation geolocation;
     private int score;
 
-    public User(String ID, String name, Geolocation geolocation, int score) {
-        this.ID = ID;
+    public User() {
+        this.name = null;
+        this.geolocation = null;
+        this.score = 0;
+    }
+
+    public User(String name, Geolocation geolocation, int score) {
         this.name = name;
         this.geolocation = geolocation;
         this.score = score;
@@ -17,14 +24,7 @@ public class User {
     public User(String name, Geolocation geolocation) {
         this.name = name;
         this.geolocation = geolocation;
-    }
-
-    public String getID() {
-        return ID;
-    }
-
-    public void setID(String ID) {
-        this.ID = ID;
+        this.score = 0;
     }
 
     public String getName() {

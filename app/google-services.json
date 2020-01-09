@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "68533104794-8cobt7bi4acealnmar0c5q0fg4r8fa81.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.spacerush",
+            "certificate_hash": "83b1afbadd921769bfdbe8a14b00cb77577e93e8"
+          }
+        },
+        {
           "client_id": "68533104794-6gqrv2pp88dh8g9neio916706psfjpfm.apps.googleusercontent.com",
           "client_type": 3
         }

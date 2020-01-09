@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.spacerush.model.User;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -18,9 +20,12 @@ public class UserDAL {
     private User entity;
     private Context context;
 
+    private DatabaseReference mDatabase;
+
     public UserDAL(User entity, Context context) {
         this.entity = entity;
         this.context = context;
+        this.mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     public void writeToFile() {
@@ -62,5 +67,9 @@ public class UserDAL {
         }
 
         return ret;
+    }
+
+    public User readFromFileToUser() {
+        return new Gson().fromJson(this.readFromFile(), User.class);
     }
 }

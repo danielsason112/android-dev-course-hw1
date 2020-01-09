@@ -3,7 +3,6 @@ package com.example.spacerush;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
@@ -43,11 +42,8 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     public void enter(View v) {
-        LayoutInflater factory = getLayoutInflater();
-        View textEntryView = factory.inflate(R.layout.activity_welcome, null);
-
         // Get name from the TextEdit
-        EditText nameInput = textEntryView.findViewById(R.id.nameInput);
+        EditText nameInput = findViewById(R.id.nameInput);
         String name = nameInput.getText().toString();
 
         // Write user details to file
