@@ -56,4 +56,16 @@ public class WelcomeActivity extends AppCompatActivity {
         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
         startActivity(intent);
     }
+
+
+
+    //onResume() register the accelerometer for listening the events
+    protected void onResume() {
+        super.onResume();
+    }
+
+    //onPause() unregister the accelerometer for stop listening the events
+    protected void onPause() {
+        super.onPause();
+    }
 }

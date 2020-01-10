@@ -14,6 +14,9 @@ import com.example.spacerush.model.Enemy;
 import com.example.spacerush.model.Friend;
 import com.example.spacerush.model.Player;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class GameView extends SurfaceView implements Runnable {
 
     private Thread gameThread;
@@ -37,6 +40,7 @@ public class GameView extends SurfaceView implements Runnable {
     private volatile boolean isPlaying;
     private volatile boolean enemyLock;
     private volatile boolean friendLock;
+    private volatile boolean tiltLock = false;
 
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
@@ -54,6 +58,7 @@ public class GameView extends SurfaceView implements Runnable {
     public final int NUM_OF_FRIENDS = 2;
     public final int FRIEND_PADDING = 1000;
     public final int FRIEND_PRIZE = 100;
+    public final long TILT_DELAY = 1000;
 
     private GameOverListener listener;
 
@@ -199,21 +204,45 @@ public class GameView extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_UP:
 
                 if(event.getX() < screenX / 2.0) {
-                    // Move left
-                    if (player.getPosX() > player.getSize()) {
-                        player.move(-(screenX / NUM_OF_PATHS) );
-                    }
+                    movePlayerLeft();
                 } else {
-                    // Move right
-                    if (player.getPosX() + player.getSize() < screenX - PLAYER_SIZE) {
-                        player.move(screenX / NUM_OF_PATHS);
-                    }
+                    movePlayerRight();
                 }
 
                 break;
         }
 
         return true;
+    }
+
+    private void movePlayerLeft() {
+        if (player.getPosX() > player.getSize()) {
+            player.move(-(screenX / NUM_OF_PATHS) );
+        }
+    }
+
+    private void movePlayerRight() {
+        if (player.getPosX() + player.getSize() < screenX - PLAYER_SIZE) {
+            player.move(screenX / NUM_OF_PATHS);
+        }
+    }
+
+    public void onTilt(float val) {
+        if (!tiltLock) {
+            if (val > 0) {
+                movePlayerRight();
+            } else {
+                movePlayerLeft();
+            }
+            tiltLock = true;
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    tiltLock = false;
+                }
+            }, 0, TILT_DELAY);
+        }
+
     }
 
     public void pause() {

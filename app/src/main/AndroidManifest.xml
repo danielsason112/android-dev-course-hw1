@@ -30,17 +30,22 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".HighScoresActivity" />
-        <activity android:name=".WelcomeActivity">
+        <activity android:name=".HighScoresActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".WelcomeActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameOverActivity" />
-        <activity android:name=".GameActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".GameOverActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".GameActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
