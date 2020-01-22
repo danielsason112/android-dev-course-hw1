@@ -34,11 +34,12 @@ public class WelcomeActivity extends AppCompatActivity {
                     public void onSuccess(Location location) {
                         if (location != null) {
                             geo = new Geolocation(location.getLatitude(), location.getLongitude());
+                        } else {
+                            // If location isn't available for some reason, a default values are set.
+                            geo = new Geolocation(Geolocation.DEFAULT_LAT, Geolocation.DEFAULT_LNG);
                         }
                     }
                 });
-
-
     }
 
     public void enter(View v) {
@@ -54,5 +55,17 @@ public class WelcomeActivity extends AppCompatActivity {
         // Start MainActivity
         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
         startActivity(intent);
+    }
+
+
+
+    //onResume() register the accelerometer for listening the events
+    protected void onResume() {
+        super.onResume();
+    }
+
+    //onPause() unregister the accelerometer for stop listening the events
+    protected void onPause() {
+        super.onPause();
     }
 }

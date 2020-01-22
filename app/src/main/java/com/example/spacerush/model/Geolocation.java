@@ -5,6 +5,9 @@ public class Geolocation {
     private double lat;
     private double lng;
 
+    public static final double DEFAULT_LAT = 50.0;
+    public static final double DEFAULT_LNG = -50.0;
+
     public Geolocation() {
     }
 
